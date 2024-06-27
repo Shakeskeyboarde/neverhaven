@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "root",
+  "license": "ISC",
+  "scripts": {
+    "build": "pnpm run -r --stream build",
+    "test": "tsc --build --force && eslint . --max-warnings=0 && depcheck --skip-missing --ignores=\"typescript,@vite*/*,vite*\"",
+    "open-coverage": "open ./coverage/index.html",
+    "modernize": "pnpx npm-check-updates@latest -i --root --peer --format group"
+  },
+  "type": "module",
+  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "depcheck": "^1.4.7",
+    "eslint": "^8.57.0",
+    "eslint-config-rational": "^6.0.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^7.14.1",
+    "vite": "^5.3.1",
+    "vite-live-preview": "^0.2.1",
+    "vite-plugin-config-lib": "^0.2.0",
+    "vite-plugin-data": "^0.2.5",
+    "vite-plugin-dts": "^3.9.1"
+  }
+}

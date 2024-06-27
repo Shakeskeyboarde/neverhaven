@@ -1,0 +1,27 @@
+// .app {
+// }
+
+:root {
+  --color: #ccc;
+  --background-color: #000;
+  --opacity-medium: 67%;
+}
+
+.stats {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  max-width: calc(100% - 1rem);
+  max-height: calc(100% - 1rem);
+  opacity: var(--opacity-medium);
+  padding: 0.5rem;
+  box-sizing: border-box;
+  color: var(--color);
+  background-color: var(--background-color);
+  font-size: 0.8125rem;
+}
+
+.interactive {
+  pointer-events: auto;
+  touch-action: auto;
+}
