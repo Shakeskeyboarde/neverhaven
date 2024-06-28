@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vite build",
+    "depcheck": "depcheck --skip-missing",
     "start": "vite build --mode=preview"
   },
   "type": "module",
