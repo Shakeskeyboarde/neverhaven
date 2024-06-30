@@ -4,17 +4,17 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Axes } from '../object/axes.js';
 import { EventEmitter } from '../util/event-emitter.js';
 
-type Events = {
+type RendererEvents = {
   debugChanged(debug: boolean): void;
   beforeRender(elapsedMs: number): void;
   afterRender(elapsedMs: number): void;
 };
 
-export interface GameOptions {
+export interface RendererOptions {
   readonly canvas: HTMLCanvasElement;
 }
 
-export interface GameStats {
+export interface RendererStats {
   readonly fps: number;
   readonly triangles: number;
   readonly lines: number;
@@ -26,7 +26,7 @@ export interface GameStats {
 
 const SAMPLE_COUNT = 10;
 
-export class Game extends EventEmitter<Events> {
+export class Renderer extends EventEmitter<RendererEvents> {
   readonly #renderer: WebGLRenderer;
   readonly #camera: PerspectiveCamera;
   readonly #scene: Scene;
@@ -48,7 +48,7 @@ export class Game extends EventEmitter<Events> {
     return this.#characterName;
   }
 
-  constructor({ canvas }: GameOptions) {
+  constructor({ canvas }: RendererOptions) {
     super();
 
     this.#width = canvas.clientWidth;
@@ -98,7 +98,7 @@ export class Game extends EventEmitter<Events> {
     this.#scene.add(object);
   }
 
-  getStats(): GameStats {
+  getStats(): RendererStats {
     return {
       fps: this.#sampleFramerates.length > 0
         ? Math.round(this.#sampleFramerates.reduce((a, b) => a + b, 0) / this.#sampleFramerates.length)

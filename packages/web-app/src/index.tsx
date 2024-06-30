@@ -2,16 +2,18 @@ import { createRoot } from 'react-dom/client';
 import { BoxGeometry, Mesh, MeshNormalMaterial } from 'three';
 
 import { App } from './app/app.jsx';
-import { Game } from './game/game.js';
+import { Renderer } from './renderer/renderer.js';
+import { GameState } from './state/state.js';
 
-const canvas = document.getElementById('game') as HTMLCanvasElement;
 const root = document.getElementById('root')!;
-const game = new Game({ canvas });
+const canvas = document.getElementById('game') as HTMLCanvasElement;
+const renderer = new Renderer({ canvas });
+const state = new GameState();
 const cube = new Mesh(new BoxGeometry(1, 1, 1), new MeshNormalMaterial());
 
 cube.name = 'cube';
-game.setDebug(true);
-game.addObject(cube);
-game.resume();
+renderer.setDebug(true);
+renderer.addObject(cube);
+renderer.resume();
 
-createRoot(root).render(<App game={game} />);
+createRoot(root).render(<App renderer={renderer} state={state} />);

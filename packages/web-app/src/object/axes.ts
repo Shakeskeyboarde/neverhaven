@@ -12,9 +12,9 @@ export class Axes extends AxesHelper {
     this.name = name;
 
     const material = this.material as LineBasicMaterial;
-    const y = new TextLabel('Y', 8, 'sans-serif', '#8f4', 'rgba(0, 0, 0, 0.33)');
-    const x = new TextLabel('X', 8, 'sans-serif', '#da2', 'rgba(0, 0, 0, 0.33)');
-    const z = new TextLabel('Z', 8, 'sans-serif', '#48f', 'rgba(0, 0, 0, 0.33)');
+    const y = new TextLabel('Y', { color: '#8f2' });
+    const x = new TextLabel('X', { color: '#da2' });
+    const z = new TextLabel('Z', { color: '#28f' });
 
     material.depthTest = false;
     material.fog = false;

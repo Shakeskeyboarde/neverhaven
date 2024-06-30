@@ -1,19 +1,14 @@
 import { type FC } from 'react';
 
-import type { Game } from '../game/game.js';
-import { GameProvider } from './game.js';
+import { type AppContext, AppContextProvider } from './context.js';
 import { Menubar } from './menubar.jsx';
 import { Stats } from './stats.js';
 
-interface Props {
-  game: Game;
-}
-
-export const App: FC<Props> = ({ game }) => {
+export const App: FC<AppContext> = (props) => {
   return (
-    <GameProvider game={game}>
+    <AppContextProvider {...props}>
       <Stats />
       <Menubar />
-    </GameProvider>
+    </AppContextProvider>
   );
 };

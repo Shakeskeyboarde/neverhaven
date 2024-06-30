@@ -21,5 +21,8 @@ export default defineConfig((env) => {
       sourcemap: true,
       chunkSizeWarningLimit: env.mode === 'production' ? undefined : Infinity,
     },
+    preview: {
+      host: true,
+    },
   };
 });

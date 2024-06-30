@@ -1,29 +1,29 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 
-import { type GameStats } from '../game/game.js';
-import { useGame } from './game.js';
+import { type RendererStats } from '../renderer/renderer.js';
+import { useAppContext } from './context.jsx';
 import classes from './style.module.scss';
 
 export const Stats: FC = () => {
-  const game = useGame();
-  const [visible, setVisible] = useState(game.debug);
+  const { renderer } = useAppContext();
+  const [visible, setVisible] = useState(renderer.debug);
   const renderCount = useRef(0);
-  const [stats, setStats] = useState<GameStats | null>(null);
+  const [stats, setStats] = useState<RendererStats | null>(null);
 
   useEffect(() => {
-    setVisible(game.debug);
+    setVisible(renderer.debug);
 
-    return game.on('debugChanged', (debug) => {
+    return renderer.on('debugChanged', (debug) => {
       setVisible(debug);
     });
   }, []);
 
   useEffect(() => {
-    return game.on('afterRender', () => {
+    return renderer.on('afterRender', () => {
       renderCount.current += 1;
 
       if (renderCount.current % 30 === 0) {
-        setStats(game.getStats());
+        setStats(renderer.getStats());
       }
     });
   }, []);

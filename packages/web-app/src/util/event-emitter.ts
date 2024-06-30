@@ -1,34 +1,51 @@
-export class EventEmitter<T extends Record<string, ((...args: any[]) => void)>> {
-  #listenerMap = new Map<unknown, Set<(...args: unknown[]) => void>>();
+export type EventListener = (...args: any[]) => void;
+
+export type EmitArgs<T extends Record<string, EventListener>, K extends keyof Omit<T, '*'> = keyof Omit<T, '*'>> = {
+  [P in K]: [name: P, ...args: Parameters<T[P]>];
+}[K];
+
+export type EventContext<T extends Record<string, EventListener>, K extends keyof Omit<T, '*'> = keyof Omit<T, '*'>> = {
+  [P in K]: { name: K; args: Parameters<T[P]> };
+}[K];
+
+/**
+ * Simple pub-sub events implementation.
+ */
+export class EventEmitter<T extends Record<string, EventListener>> {
+  #listenersMap = new Map<unknown, Set<EventListener>>();
 
   constructor() {
     this.on = this.on.bind(this);
   }
 
-  on<K extends keyof T>(type: K, listener: T[K]): () => void {
-    let listeners = this.#listenerMap.get(type);
+  on<K extends keyof T | '*'>(name: K, listener: K extends '*' ? (event: EventContext<T>) => void : T[K]): () => void {
+    let listeners = this.#listenersMap.get(name);
 
     if (!listeners) {
       listeners = new Set();
-      this.#listenerMap.set(type, listeners);
+      this.#listenersMap.set(name, listeners);
     }
 
-    const listener_ = (...args: unknown[]): void => listener(...args);
+    const listener_: EventListener = (...args) => listener(...args as [any]);
 
     listeners.add(listener_);
 
     return () => {
-      this.#listenerMap.get(type)?.delete(listener_);
+      this.#listenersMap.get(name)?.delete(listener_);
     };
   }
 
-  emit<K extends keyof T>(type: K, ...args: Parameters<T[K]>): void {
-    const listeners = this.#listenerMap.get(type);
+  emit<K extends keyof Omit<T, '*'>>(...[name, ...args]: EmitArgs<T, K>): void {
+    const listeners = this.#listenersMap.get(name);
 
     if (listeners) {
       for (const listener of listeners) {
         listener(...args);
       }
+    }
+
+    for (const listener of this.#listenersMap.get('*') ?? []) {
+      listener({ name, args });
     }
   }
 }
