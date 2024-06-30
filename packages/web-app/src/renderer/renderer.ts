@@ -4,10 +4,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Events } from '../util/events.js';
 import { Axes } from './axes.js';
 
-type EventsType = {
-  debugChanged: (debug: boolean) => void;
-};
-
 export interface RendererOptions {
   readonly canvas: HTMLCanvasElement;
 }
@@ -24,7 +20,9 @@ export interface RendererStats {
 
 const SAMPLE_COUNT = 10;
 
-export class Renderer extends Events<EventsType> {
+export class Renderer extends Events<{
+  debugChanged: (debug: boolean) => void;
+}> {
   readonly #renderer: WebGLRenderer;
   readonly #camera: PerspectiveCamera;
   readonly #scene: Scene;
@@ -52,7 +50,7 @@ export class Renderer extends Events<EventsType> {
     this.#width = canvas.clientWidth;
     this.#height = canvas.clientHeight;
     this.#pixelRatio = canvas.ownerDocument.defaultView?.devicePixelRatio ?? 1;
-    this.#renderer = new WebGLRenderer({ antialias: true, canvas });
+    this.#renderer = new WebGLRenderer({ antialias: true, canvas, powerPreference: 'high-performance' });
     this.#renderer.setPixelRatio(this.#pixelRatio);
     this.#renderer.setSize(this.#width, this.#height, false);
     this.#camera = new PerspectiveCamera(45, this.#width / this.#height, 0.1, 100);

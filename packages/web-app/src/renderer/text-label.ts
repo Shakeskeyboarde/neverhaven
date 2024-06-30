@@ -5,7 +5,7 @@ import { CanvasTexture, LinearFilter, Sprite, SpriteMaterial } from 'three';
 const yOffset = navigator.userAgent.includes('Safari')
   ? navigator.userAgent.includes('Chrome')
     ? -0.5
-    : -2.75
+    : -2.25
   : 0;
 
 interface Options {
@@ -30,7 +30,7 @@ export class TextLabel extends Sprite {
   #text: string;
 
   constructor(text: string, {
-    fontSize = 10,
+    fontSize = 12,
     fontFamily = 'Arial, sans-serif',
     color = 'white',
     backgroundColor = 'rgba(0, 0, 0, 0.4)',
@@ -88,8 +88,8 @@ export class TextLabel extends Sprite {
     this.#texture.offset.set(0, 1 - (height / 64));
     this.#texture.needsUpdate = true;
     this.scale.set(
-      width * 0.001,
-      height * 0.001,
+      width * 0.0007,
+      height * 0.0007,
       0,
     );
   }

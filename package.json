@@ -14,11 +14,13 @@
   "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74",
   "devDependencies": {
     "@types/node": "^20.14.8",
+    "@vitejs/plugin-react": "^4.3.1",
     "depcheck": "^1.4.7",
     "eslint": "^8.57.0",
     "eslint-config-rational": "^6.0.8",
     "execa": "^9.3.0",
     "react": "^18.3.1",
+    "sass": "^1.77.6",
     "typescript": "^5.5.2",
     "vite": "^5.3.1",
     "vite-live-preview": "^0.2.1",

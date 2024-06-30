@@ -11,6 +11,9 @@ importers:
       '@types/node':
         specifier: ^20.14.8
         version: 20.14.8
+      '@vitejs/plugin-react':
+        specifier: ^4.3.1
+        version: 4.3.1(vite@5.3.1(@types/node@20.14.8)(sass@1.77.6))
       depcheck:
         specifier: ^1.4.7
         version: 1.4.7
@@ -26,6 +29,9 @@ importers:
       react:
         specifier: ^18.3.1
         version: 18.3.1
+      sass:
+        specifier: ^1.77.6
+        version: 1.77.6
       typescript:
         specifier: ^5.5.2
         version: 5.5.2
@@ -68,13 +74,6 @@ importers:
       three:
         specifier: ^0.165.0
         version: 0.165.0
-    devDependencies:
-      '@vitejs/plugin-react':
-        specifier: ^4.3.1
-        version: 4.3.1(vite@5.3.1(@types/node@20.14.8)(sass@1.77.6))
-      sass:
-        specifier: ^1.77.6
-        version: 1.77.6
 
 packages:
 
