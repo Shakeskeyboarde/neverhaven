@@ -1,6 +1,6 @@
-import { GameStateEventEmitter } from './events.js';
+import { GameStateEvents } from './events.js';
 
-export class GameWorker extends GameStateEventEmitter {
+export class GameWorker extends GameStateEvents {
   protected constructor() {
     super();
     this._connect(self);

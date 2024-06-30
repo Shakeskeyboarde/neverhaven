@@ -1,8 +1,8 @@
-import { GameStateEventEmitter } from './events.js';
+import { GameStateEvents } from './events.js';
 
 const PING_INTERVAL_MS = 1000;
 
-export class GameState extends GameStateEventEmitter {
+export class GameState extends GameStateEvents {
   readonly #worker: Worker;
 
   #pingInterval: number | undefined;

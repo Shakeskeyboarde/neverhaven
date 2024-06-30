@@ -1,4 +1,4 @@
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
 import { type RendererStats } from '../renderer/renderer.js';
 import { useAppContext } from './context.jsx';
@@ -7,7 +7,6 @@ import classes from './style.module.scss';
 export const Stats: FC = () => {
   const { renderer } = useAppContext();
   const [visible, setVisible] = useState(renderer.debug);
-  const renderCount = useRef(0);
   const [stats, setStats] = useState<RendererStats | null>(null);
 
   useEffect(() => {
@@ -16,17 +15,15 @@ export const Stats: FC = () => {
     return renderer.on('debugChanged', (debug) => {
       setVisible(debug);
     });
-  }, []);
+  }, [renderer]);
 
   useEffect(() => {
-    return renderer.on('afterRender', () => {
-      renderCount.current += 1;
+    const interval = setInterval(() => {
+      setStats(renderer.getStats());
+    }, 500);
 
-      if (renderCount.current % 30 === 0) {
-        setStats(renderer.getStats());
-      }
-    });
-  }, []);
+    return () => clearInterval(interval);
+  }, [renderer]);
 
   if (!visible) return null;
 

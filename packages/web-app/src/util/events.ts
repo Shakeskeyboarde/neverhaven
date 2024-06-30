@@ -11,7 +11,7 @@ export type EventContext<T extends Record<string, EventListener>, K extends keyo
 /**
  * Simple pub-sub events implementation.
  */
-export class EventEmitter<T extends Record<string, EventListener>> {
+export class Events<T extends Record<string, EventListener>> {
   #listenersMap = new Map<unknown, Set<EventListener>>();
 
   constructor() {

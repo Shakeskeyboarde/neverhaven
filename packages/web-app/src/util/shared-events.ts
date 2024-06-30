@@ -1,4 +1,4 @@
-import { type EmitArgs, EventEmitter } from './event-emitter.js';
+import { type EmitArgs, Events } from './events.js';
 
 interface Target {
   addEventListener(type: 'message', listener: (event: MessageEvent) => void): void;
@@ -20,7 +20,7 @@ type AnyData<T extends Record<string, EventListener>> = {
  * Event emitter which can be connected to other threads so that evens can be
  * shared between instances of the shared emitter with the same channel.
  */
-export class SharedEventEmitter<T extends Record<string, EventListener>> extends EventEmitter<T> {
+export class SharedEvents<T extends Record<string, EventListener>> extends Events<T> {
   readonly #channel: string;
   readonly #targets = new Set<Target>();
 

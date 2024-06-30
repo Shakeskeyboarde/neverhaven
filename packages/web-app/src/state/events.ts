@@ -1,6 +1,6 @@
-import { SharedEventEmitter } from '../util/shared-event-emitter.js';
+import { SharedEvents } from '../util/shared-events.js';
 
-type GameStateEvents = {
+type Events = {
   ping(): void;
   pong(): void;
   init(): void;
@@ -8,7 +8,7 @@ type GameStateEvents = {
   disconnect(): void;
 };
 
-export class GameStateEventEmitter extends SharedEventEmitter<GameStateEvents> {
+export class GameStateEvents extends SharedEvents<Events> {
   constructor() {
     super('GameStateEventEmitter');
   }

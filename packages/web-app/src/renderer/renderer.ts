@@ -1,13 +1,11 @@
 import { type Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-import { Axes } from '../object/axes.js';
-import { EventEmitter } from '../util/event-emitter.js';
+import { Events } from '../util/events.js';
+import { Axes } from './axes.js';
 
-type RendererEvents = {
-  debugChanged(debug: boolean): void;
-  beforeRender(elapsedMs: number): void;
-  afterRender(elapsedMs: number): void;
+type EventsType = {
+  debugChanged: (debug: boolean) => void;
 };
 
 export interface RendererOptions {
@@ -26,7 +24,7 @@ export interface RendererStats {
 
 const SAMPLE_COUNT = 10;
 
-export class Renderer extends EventEmitter<RendererEvents> {
+export class Renderer extends Events<EventsType> {
   readonly #renderer: WebGLRenderer;
   readonly #camera: PerspectiveCamera;
   readonly #scene: Scene;
@@ -123,11 +121,9 @@ export class Renderer extends EventEmitter<RendererEvents> {
     this.#scene
       .getObjectsByProperty('name', 'DEBUG')
       .forEach((object: Object3D & { update?: () => void }) => object.update?.());
-    this.emit('beforeRender', elapsedMs);
     this.#updateCamera();
     this.#updateViewport();
     this.#renderer.render(this.#scene, this.#camera);
-    this.emit('afterRender', elapsedMs);
   };
 
   #updateCamera = (): void => {
