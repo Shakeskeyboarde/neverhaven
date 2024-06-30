@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { type RendererStats } from '../renderer/renderer.js';
-import { buildTimestamp, buildCommit } from '../util/build.data.js';
+import { buildCommit, buildTimestamp } from '../util/build.data.js';
 import { useAppContext } from './context.js';
 import classes from './style.module.scss';
 
