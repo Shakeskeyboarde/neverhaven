@@ -4,10 +4,10 @@
   "license": "ISC",
   "scripts": {
     "build": "pnpm -r --stream build",
+    "depcheck": "pnpm -r --stream depcheck",
     "typecheck": "tsc --build --force",
-    "depcheck": "depcheck --skip-missing --ignores=\"typescript,vite*,react\" && pnpm -r --stream depcheck",
     "eslint": "eslint . --max-warnings=0",
-    "test": "pnpm typecheck && pnpm eslint && pnpm depcheck",
+    "test": "pnpm depcheck && pnpm typecheck && pnpm eslint",
     "modernize": "pnpx npm-check-updates@latest -i --root --peer --format group"
   },
   "type": "module",
