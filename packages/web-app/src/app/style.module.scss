@@ -8,7 +8,7 @@
   --opacity-medium: 67%;
 }
 
-.stats {
+.debug {
   position: absolute;
   top: 0;
   left: 0;
@@ -19,7 +19,8 @@
   color: var(--color-dim);
   background-color: var(--background-color);
   opacity: var(--opacity-medium);
-  font-size: 0.8125rem;
+  font-weight: 100;
+  font-size: 0.75rem;
 }
 
 .menubar {
@@ -31,6 +32,13 @@
   opacity: var(--opacity-medium);
   display: flex;
   gap: 0.5rem;
+}
+
+.plain-list {
+  list-style-type: none;
+  padding: 0;
+  padding-inline-start: 2ex;
+  margin: 0;
 }
 
 .icon-link {

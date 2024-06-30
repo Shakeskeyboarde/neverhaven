@@ -1,10 +1,11 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { type RendererStats } from '../renderer/renderer.js';
-import { useAppContext } from './context.jsx';
+import { buildTimestamp, buildCommit } from '../util/build.data.js';
+import { useAppContext } from './context.js';
 import classes from './style.module.scss';
 
-export const Stats: FC = () => {
+export const Debug: FC = () => {
   const { renderer } = useAppContext();
   const [visible, setVisible] = useState(renderer.debug);
   const [stats, setStats] = useState<RendererStats | null>(null);
@@ -28,28 +29,43 @@ export const Stats: FC = () => {
   if (!visible) return null;
 
   return (
-    <div className={classes.stats}>
-      <div>
-        {`FPS: ${stats?.fps ?? 0}`}
-      </div>
-      <div>
-        {`Frame: ${stats?.frame ?? 0}`}
-      </div>
-      <div>
-        {`Time: ${getTimeString(stats?.timeMs ?? 0)}`}
-      </div>
-      <div>
-        {`Calls: ${stats?.calls ?? 0}`}
-      </div>
-      <div>
-        {`Triangles: ${stats?.triangles ?? 0}`}
-      </div>
-      <div>
-        {`Lines: ${stats?.lines ?? 0}`}
-      </div>
-      <div>
-        {`Points: ${stats?.points ?? 0}`}
-      </div>
+    <div className={classes.debug}>
+      <div>Build</div>
+      <ul className={classes.plainList}>
+        <li>
+          {`Date: ${new Date(buildTimestamp).toLocaleDateString()}`}
+        </li>
+        <li>
+          {`Time: ${new Date(buildTimestamp).toLocaleTimeString()}`}
+        </li>
+        <li>
+          {`Commit: ${buildCommit.slice(0, 8)}`}
+        </li>
+      </ul>
+      <div>Renderer</div>
+      <ul className={classes.plainList}>
+        <li>
+          {`FPS: ${stats?.fps ?? 0}`}
+        </li>
+        <li>
+          {`Frame: ${stats?.frame ?? 0}`}
+        </li>
+        <li>
+          {`Time: ${getTimeString(stats?.timeMs ?? 0)}`}
+        </li>
+        <li>
+          {`Calls: ${stats?.calls ?? 0}`}
+        </li>
+        <li>
+          {`Triangles: ${stats?.triangles ?? 0}`}
+        </li>
+        <li>
+          {`Lines: ${stats?.lines ?? 0}`}
+        </li>
+        <li>
+          {`Points: ${stats?.points ?? 0}`}
+        </li>
+      </ul>
     </div>
   );
 };

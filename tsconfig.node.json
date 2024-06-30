@@ -4,7 +4,8 @@
     "*.js",
     "*.ts",
     "packages/*/*.js",
-    "packages/*/*.ts"
+    "packages/*/*.ts",
+    "packages/*/src/**/*.data.ts"
 , "eslint.config.js.old"  ],
   "exclude": [],
   "compilerOptions": {
