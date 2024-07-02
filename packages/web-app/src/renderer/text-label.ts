@@ -16,6 +16,10 @@ interface Options {
   weight?: number;
 }
 
+/**
+ * A text label that always faces the camera and is the same size regardless of
+ * world position.
+ */
 export class TextLabel extends Sprite {
   readonly #canvas: HTMLCanvasElement;
   readonly #context: CanvasRenderingContext2D;

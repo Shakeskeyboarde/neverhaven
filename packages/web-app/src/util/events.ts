@@ -22,6 +22,10 @@ export class Events<T extends Record<string, EventListener>> {
     this.on = this.on.bind(this);
   }
 
+  /**
+   * Add an event listener. Returns a function which removes the listener (ie.
+   * an `off` function).
+   */
   on<K extends keyof T | '*'>(
     name: K,
     listener: K extends '*' ? (event: EventContext<T>) => void : T[K],
@@ -52,6 +56,9 @@ export class Events<T extends Record<string, EventListener>> {
     return off;
   }
 
+  /**
+   * Emit an event.
+   */
   emit<K extends keyof Omit<T, '*'>>(...[name, ...args]: EmitEventArgs<T, K>): void {
     const handlers = this.#handlers.get(name);
 

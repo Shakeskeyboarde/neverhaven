@@ -28,6 +28,9 @@ export class GameWorker extends GameUniverse {
     }
   }
 
+  /**
+   * Open an IndexedDB instance for persistent game storage.
+   */
   #openDatabase = (): Promise<IDBDatabase | null> => new Promise((resolve, reject) => {
     const req = indexedDB.open('GameWorker', 1);
 
@@ -46,18 +49,24 @@ export class GameWorker extends GameUniverse {
     });
   });
 
-  #onPing = (): void => {
-    this.emit('pong');
-  };
-
+  /**
+   * Provision initial game resources.
+   */
   #onInitialize = (): void => {
     Promise.resolve().then(async () => {
-      // TODO: Initialize the game state.
       this.#db = await this.#openDatabase();
+      // TODO: Provision the world tile data.
       this.emit('initializeSuccess', { db: this.#db !== null });
     }).catch((error) => {
       this.emit('initializeFailure', error);
     });
+  };
+
+  /**
+   * Respond to a ping events from the main thread.
+   */
+  #onPing = (): void => {
+    this.emit('pong');
   };
 
   // XXX: By including a singleton, just loading this file in the worker

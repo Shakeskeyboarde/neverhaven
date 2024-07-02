@@ -29,6 +29,12 @@ export class SharedEvents<T extends Record<string, EventListener>> extends Event
     this.#channel = channel;
   }
 
+  /**
+   * Emit an event locally and to shared event targets.
+   *
+   * **Note:** Avoid overriding this method. Override the {@link _emit} or
+   * {@link _postSharedEventMessage} methods instead.
+   */
   override emit<K extends keyof Omit<T, '*'>>(
     ...[name, ...args]: EmitEventArgs<T, K>
   ): void {
@@ -39,6 +45,8 @@ export class SharedEvents<T extends Record<string, EventListener>> extends Event
   }
 
   /**
+   * Emit a message locally only.
+   *
    * Override to filter or mutate message before locally emitting.
    */
   protected _emit(message: AnySharedEventMessage<T>): void {
@@ -46,7 +54,11 @@ export class SharedEvents<T extends Record<string, EventListener>> extends Event
   }
 
   /**
+   * Post a message to shared event targets.
+   *
    * Override to filter or mutate messages before posting to share targets.
+   * This may help with performance by reducing the number of messages sent
+   * between threads.
    */
   protected _postSharedEventMessage(message: AnySharedEventMessage<T>): void {
     this.#targets.forEach((target) => target.postMessage(message));

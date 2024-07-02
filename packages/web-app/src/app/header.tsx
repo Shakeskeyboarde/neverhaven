@@ -4,6 +4,10 @@ import { createPortal } from 'react-dom';
 import { useAppContext } from './context.jsx';
 import classes from './style.module.scss';
 
+/**
+ * Banners rendered at the top of the screen to display warnings and other
+ * important information.
+ */
 export const Header: FC = () => {
   const { header, state } = useAppContext();
   const [warnings, setWarnings] = useState<readonly string[]>([]);

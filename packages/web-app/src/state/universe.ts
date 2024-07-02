@@ -18,7 +18,7 @@ type EventTypes = {
   initializeSuccess(capabilities: GameUniverseCapabilities): void;
   initializeFailure(reason: unknown): void;
   disconnect(): void;
-  nodeParent(nodeId: GameNodeId, parent: GameNodeId | null): void;
+  nodeParent(nodeId: GameNodeId, parent: GameNodeId | null, position: GamePosition): void;
   nodeChildAdded(nodeId: GameNodeId, child: GameNodeId): void;
   nodeChildRemoved(node: GameNodeId, child: GameNodeId): void;
   nodePosition(nodeId: GameNodeId, position: GamePosition): void;
@@ -67,6 +67,10 @@ export class GameUniverse extends SharedEvents<EventTypes> {
     return node;
   }
 
+  /**
+   * Returns true if mutations are allowed. Otherwise, returns false in
+   * production, and throws in development.
+   */
   #allowMutation = (): boolean => {
     if (this._allowMutation) return true;
     if (import.meta.env.DEV) throw new Error('universe mutation not allowed');

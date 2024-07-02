@@ -2,6 +2,10 @@ import { AxesHelper, type Camera, type LineBasicMaterial, Vector3 } from 'three'
 
 import { TextLabel } from './text-label.js';
 
+/**
+ * ThreeJS AxesHelper with a fixed position relative to the camera and
+ * with text labels for each axis.
+ */
 export class Axes extends AxesHelper {
   readonly #camera: Camera;
 

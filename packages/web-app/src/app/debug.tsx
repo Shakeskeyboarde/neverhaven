@@ -5,6 +5,10 @@ import { buildCommit, buildTimestamp } from '../util/build.data.js';
 import { useAppContext } from './context.js';
 import classes from './style.module.scss';
 
+/**
+ * Display information about rendering and the game state that is not normally
+ * useful to the player.
+ */
 export const Debug: FC = () => {
   const { renderer } = useAppContext();
   const [visible, setVisible] = useState(renderer.debug);
