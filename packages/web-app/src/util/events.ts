@@ -1,6 +1,6 @@
 export type EventListener = (...args: any[]) => void;
 
-export type EmitArgs<T extends Record<string, EventListener>, K extends keyof Omit<T, '*'> = keyof Omit<T, '*'>> = {
+export type EmitEventArgs<T extends Record<string, EventListener>, K extends keyof Omit<T, '*'> = keyof Omit<T, '*'>> = {
   [P in K]: [name: P, ...args: Parameters<T[P]>];
 }[K];
 
@@ -8,44 +8,61 @@ export type EventContext<T extends Record<string, EventListener>, K extends keyo
   [P in K]: { name: K; args: Parameters<T[P]> };
 }[K];
 
+export interface OnEventOptions {
+  readonly once?: boolean;
+}
+
 /**
  * Simple pub-sub events implementation.
  */
 export class Events<T extends Record<string, EventListener>> {
-  #listenersMap = new Map<unknown, Set<EventListener>>();
+  #handlers = new Map<unknown, Set<EventListener>>();
 
   constructor() {
     this.on = this.on.bind(this);
   }
 
-  on<K extends keyof T | '*'>(name: K, listener: K extends '*' ? (event: EventContext<T>) => void : T[K]): () => void {
-    let listeners = this.#listenersMap.get(name);
+  on<K extends keyof T | '*'>(
+    name: K,
+    listener: K extends '*' ? (event: EventContext<T>) => void : T[K],
+    { once = false }: OnEventOptions = {},
+  ): () => void {
+    let listeners = this.#handlers.get(name);
 
     if (!listeners) {
       listeners = new Set();
-      this.#listenersMap.set(name, listeners);
+      this.#handlers.set(name, listeners);
     }
 
-    const listener_: EventListener = (...args) => listener(...args as [any]);
+    const handler: EventListener = once
+      ? (...args) => {
+          listener(...args as [any]);
+          off();
+        }
+      : (...args) => {
+          listener(...args as [any]);
+        };
 
-    listeners.add(listener_);
-
-    return () => {
-      this.#listenersMap.get(name)?.delete(listener_);
+    const off = (): void => {
+      this.#handlers.get(name)?.delete(handler);
     };
+
+    listeners.add(handler);
+
+    return off;
   }
 
-  emit<K extends keyof Omit<T, '*'>>(...[name, ...args]: EmitArgs<T, K>): void {
-    const listeners = this.#listenersMap.get(name);
+  emit<K extends keyof Omit<T, '*'>>(...[name, ...args]: EmitEventArgs<T, K>): void {
+    const handlers = this.#handlers.get(name);
 
-    if (listeners) {
-      for (const listener of listeners) {
-        listener(...args);
+    if (handlers) {
+      for (const handler of handlers) {
+        handler(...args);
       }
     }
 
-    for (const listener of this.#listenersMap.get('*') ?? []) {
-      listener({ name, args });
+    for (const handler of this.#handlers.get('*') ?? []) {
+      handler({ name, args });
     }
   }
 }

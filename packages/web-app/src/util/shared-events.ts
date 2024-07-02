@@ -1,4 +1,4 @@
-import { type EmitArgs, Events } from './events.js';
+import { type EmitEventArgs, type EventListener, Events } from './events.js';
 
 interface Target {
   addEventListener(type: 'message', listener: (event: MessageEvent) => void): void;
@@ -6,14 +6,14 @@ interface Target {
   postMessage(message: any): void;
 }
 
-interface Data<T extends Record<string, EventListener>, K extends keyof Omit<T, '*'>> {
+export interface SharedEventMessage<T extends Record<string, EventListener>, K extends keyof Omit<T, '*'>> {
   readonly channel: string;
   readonly name: K;
   readonly args: Parameters<T[K]>;
 }
 
-type AnyData<T extends Record<string, EventListener>> = {
-  [P in keyof Omit<T, '*'>]: Data<T, P>;
+export type AnySharedEventMessage<T extends Record<string, EventListener>> = {
+  [P in keyof Omit<T, '*'>]: SharedEventMessage<T, P>;
 }[keyof Omit<T, '*'>];
 
 /**
@@ -30,17 +30,32 @@ export class SharedEvents<T extends Record<string, EventListener>> extends Event
   }
 
   override emit<K extends keyof Omit<T, '*'>>(
-    ...[name, ...args]: EmitArgs<T, K>
+    ...[name, ...args]: EmitEventArgs<T, K>
   ): void {
-    super.emit(name, ...args);
-    const message = this.#createMessageData(name, args);
+    const message = this.#createMessage(name, args);
+
+    this._emit(message);
+    this._postSharedEventMessage(message);
+  }
+
+  /**
+   * Override to filter or mutate message before locally emitting.
+   */
+  protected _emit(message: AnySharedEventMessage<T>): void {
+    super.emit(message.name, ...message.args);
+  }
+
+  /**
+   * Override to filter or mutate messages before posting to share targets.
+   */
+  protected _postSharedEventMessage(message: AnySharedEventMessage<T>): void {
     this.#targets.forEach((target) => target.postMessage(message));
   }
 
   /**
-   * Connect to a target thread.
+   * Add a target that will receive posted event messages.
    */
-  protected _connect(target: Target): void {
+  protected _addSharedEventTarget(target: Target): void {
     if (this.#targets.has(target)) return;
 
     target.addEventListener('message', this.#onWorkerMessage);
@@ -48,20 +63,22 @@ export class SharedEvents<T extends Record<string, EventListener>> extends Event
   }
 
   /**
-   * Disconnect from a target thread.
+   * Remove a target so that it will no longer receive posted event messages.
    */
-  protected _disconnect(target: Target): void {
+  protected _removeSharedEventTarget(target: Target): void {
     target.removeEventListener('message', this.#onWorkerMessage);
     this.#targets.delete(target);
   }
 
-  #onWorkerMessage = ({ data }: MessageEvent<AnyData<T> | { channel?: undefined } | null>): void => {
-    if (data?.channel === this.#channel) {
-      super.emit(data.name, ...data.args);
+  #onWorkerMessage = (
+    { data: message }: MessageEvent<AnySharedEventMessage<T> | { channel?: undefined } | null>,
+  ): void => {
+    if (message?.channel === this.#channel) {
+      this._emit(message);
     }
   };
 
-  #createMessageData = <K extends keyof Omit<T, '*'>>(name: K, args: Parameters<T[K]>): Data<T, K> => {
+  #createMessage = <K extends keyof Omit<T, '*'>>(name: K, args: Parameters<T[K]>): SharedEventMessage<T, K> => {
     return { channel: this.#channel, name, args };
   };
 }

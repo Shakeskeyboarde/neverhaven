@@ -6,6 +6,7 @@ import type { GameState } from '../state/state.js';
 export interface AppContext {
   readonly renderer: Renderer;
   readonly state: GameState;
+  readonly header: HTMLElement;
 }
 
 const Context = createContext<AppContext | null>(null);
